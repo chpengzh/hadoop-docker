@@ -18,36 +18,47 @@ docker build . -t hadoop
 docker network create cluster --subnet 10.1.1.0/24
 ```
 
-> Create 3 docker container (1 master and 2 slaves)
+> Demo: Create 4 docker container (1 master with 3 slaves)
 
 ```
 docker run -dt \
     --network cluster \
-    --name docker2 \
-    --ip 10.1.1.2 \
-    -e hadoop_master=docker2 \
-    -e hadoop_slaves=docker3,docker4 \
+    --name master \
+    -e hadoop_master=master \
+    -e hadoop_slaves=slave1,slave2,slave3 \
+    -p 50070:50070 \
     hadoop
 
 docker run -dt \
     --network cluster \
-    --name docker3 \
-    --ip 10.1.1.3 \
-    -e hadoop_master=docker2 \
-    -e hadoop_slaves=docker3,docker4 \
+    --name slave1 \
+    -e hadoop_master=master \
+    -e hadoop_slaves=slave1,slave2,slave3 \
     hadoop
 
 docker run -dt \
     --network cluster \
-    --name docker4 \
-    --ip 10.1.1.4 \
-    -e hadoop_master=docker2 \
-    -e hadoop_slaves=docker3,docker4 \
+    --name slave2 \
+    -e hadoop_master=master \
+    -e hadoop_slaves=slave1,slave2,slave3 \
+    hadoop
+    
+docker run -dt \
+    --network cluster \
+    --name slave3 \
+    -e hadoop_master=master \
+    -e hadoop_slaves=slave1,slave2,slave3 \
     hadoop
 ```
 
 > Initiate and start hadoop cluster
 
 ```
-docker exec -it docker2 /bin/bash /opt/bin/initiate-cluster 
+docker exec -it master /bin/bash /opt/bin/initiate-cluster 
 ```
+
+## Check your cluster status in browser
+
+![master](img/master.png)
+
+![slaves](img/slaves.png)

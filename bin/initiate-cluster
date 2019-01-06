@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # initiate ssh
-for host in $(echo $hdockeadoop_slaves | tr "," "\n")
+for host in $(echo $hadoop_slaves | tr "," "\n")
 do
     ssh -o StrictHostKeyChecking=no ${host} echo "ping success"
 done
