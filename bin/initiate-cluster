@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# initiate ssh
+for host in $(echo $hdockeadoop_slaves | tr "," "\n")
+do
+    ssh -o StrictHostKeyChecking=no ${host} echo "ping success"
+done
+
+# initiate hdfs
+/opt/hadoop/bin/hdfs namenode -format
+ssh -o StrictHostKeyChecking=no ${hadoop_master}  /opt/hadoop/sbin/start-all.sh
